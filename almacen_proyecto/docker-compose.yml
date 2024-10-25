@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Marc2602*
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  # Archivo de inicialización
+    networks:
+      - mynetwork
+
+  usuarios:
+    build:
+      context: ./microservicios/usuarios
+      dockerfile: Dockerfile
+    ports:
+      - "3005:3005"
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+
+  carros:
+    build:
+      context: ./microservicios/carros
+      dockerfile: Dockerfile
+    ports:
+      - "3007:3007"
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+
+  ventas:
+    build:
+      context: ./microservicios/ventas
+      dockerfile: Dockerfile
+    ports:
+      - "3009:3009"
+    networks:
+      - mynetwork
+    depends_on:
+      - db
+
+  web:
+    build:
+      context: ./web
+    ports:
+      - "80:80"
+    volumes:
+      - ./web:/var/www/html
+    depends_on:
+      - db
+
+networks:
+  mynetwork:

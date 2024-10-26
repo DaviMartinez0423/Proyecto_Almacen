@@ -17,7 +17,7 @@ async function createUser(user) {
 
 async function updateUser(id, user) {
     const { name, gender, phone, role, password } = user;
-    await db.query('UPDATE usuarios SET name = ?, gender = ?, phone = ?, role = ?, password = ? WHERE id = ?', [name, gender, phone, role, password, id]);
+    await db.query('UPDATE usuarios SET name = ?, gender = ?, phone = ?, role = ?, password = ?', [name, gender, phone, role, password]);
 }
 
 async function deleteUser(id) {

@@ -1,0 +1,141 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: airbnb_app
+    ports:
+      - 3316:3306
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == serverAirbnb
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  usuarios:
+    image: marc2602/usuarios:latest
+    depends_on:
+      - db
+    ports:
+      - 3001:3001
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == serverAirbnb
+
+  airbnbs:
+    image: marc2602/airbnbs:latest
+    depends_on:
+      - db
+    ports:
+      - 3002:3002
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == serverAirbnb
+
+  reservas:
+    image: marc2602/reservas:latest
+    depends_on:
+      - db
+    ports:
+      - 3003:3003
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == serverAirbnb
+
+  web1:
+    image: marc2602/webproyec:latest
+    depends_on:
+      - usuarios
+      - airbnbs
+      - reservas
+    volumes:
+      - output_data:/app/output
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == workerAirbnb
+
+  web2:
+    image: marc2602/webproyec:latest
+    depends_on:
+      - usuarios
+      - airbnbs
+      - reservas
+    volumes:
+      - output_data:/app/output
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == workerAirbnb
+
+  haproxy:
+    image: marc2602/haproxy:latest
+    depends_on:
+      - web1
+      - web2
+    ports:
+      - "5080:80"
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == serverAirbnb
+
+  transferencia_df:
+    image: marc2602/transferencia_df:latest
+    depends_on:
+      - db
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == workerAirbnb
+
+  spark-app:
+    image: marc2602/spark-app:latest
+    ports:
+      - "5000:5000"
+    volumes:
+      - output_data:/app/output
+    environment:
+      SPARK_HOME: /opt/spark
+      PATH: $PATH:/opt/spark/bin
+    networks:
+      - airbnbs_platform
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == workerAirbnb
+
+networks:
+  airbnbs_platform:
+
+volumes:
+  db_data:
+  output_data:

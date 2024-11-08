@@ -66,6 +66,14 @@ Los resultados del análisis se almacenan en el directorio output. Los archivos 
 -  price_outliers.csv
 -  monthly_reviews.csv
 
+### 4. Visualizacion
+
+Para visualizar los resultados, ve al tu navegador y entra a este link
+
+```bish
+http://<tu_ip>:8050
+```
+
 ### Contacto
 
 Si tiene alguna pregunta, puede comunicarse a nuestros correos electronicos

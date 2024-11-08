@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Análisis de Reviews</title>
+</head>
+<body>
+    <h1>Análisis de Reviews por Ubicación</h1>
+    <table border="1">
+        <tr>
+            <th>Reviewer Location</th>
+            <th>Review Count</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record['Reviewer_Location'] }}</td>
+            <td>{{ record['count'] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

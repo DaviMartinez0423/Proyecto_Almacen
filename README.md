@@ -74,6 +74,11 @@ Para visualizar los resultados, ve al tu navegador y entra a este link
 http://<tu_ip>:8050
 ```
 
+Al levantarse los contenedores, se crean usuairos y contraseñas para acceder a la visualización de los datos.
+
+-   admin@admim.com, admin (Usuario Admin)
+-   cerati@gmail.com, 1234 (Usuario User)
+
 ### Contacto
 
 Si tiene alguna pregunta, puede comunicarse a nuestros correos electronicos

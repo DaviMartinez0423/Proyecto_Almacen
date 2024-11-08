@@ -1,0 +1,113 @@
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=airbnb_app
+    ports:
+      - 3316:3306
+    expose:
+      - 3316
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    networks:
+      - airbnbs_platform
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-ppassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  usuarios:
+    #image: marc2602/usuarios:latest
+    build: ./microservicios/usuarios
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 3001:3001
+    networks:
+      - airbnbs_platform
+
+  airbnbs:
+    #image: marc2602/airbnbs:latest
+    build: ./microservicios/airbnbs
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 3002:3002
+    networks:
+      - airbnbs_platform
+
+  reservas:
+    #image: marc2602/reservas:latest
+    build: ./microservicios/reservas
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - 3003:3003
+    networks:
+      - airbnbs_platform
+
+  web1:
+    #image: marc2602/web1:latest
+    build: ./web
+    depends_on:
+      - usuarios
+      - airbnbs
+      - reservas
+    volumes:
+      - ./salida/output:/app/output
+    networks:
+      - airbnbs_platform
+
+  web2:
+    #image: marc2602/web2:latest
+    build: ./web
+    depends_on:
+      - usuarios
+      - airbnbs
+      - reservas
+    volumes:
+      - ./salida/output:/app/output 
+    networks:
+      - airbnbs_platform
+
+  haproxy:
+    #image: marc2602/haproxy:latest
+    build: ./haproxy
+    depends_on:
+      - web1
+      - web2
+    ports:
+      - "5080:80"
+    networks:
+      - airbnbs_platform
+
+  transferencia_df:
+    #image: marc2602/transferencia_df:latest
+    build: ./transferencia_df
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - airbnbs_platform
+
+  spark-app:
+    build: ./salida
+    container_name: spark-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./salida:/app
+      - ./salida/output:/app/output
+    environment:
+      - SPARK_HOME=/opt/spark
+      - PATH=$PATH:/opt/spark/bin
+    networks:
+      - airbnbs_platform
+
+networks:
+  airbnbs_platform:

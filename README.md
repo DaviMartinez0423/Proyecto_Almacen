@@ -19,15 +19,16 @@ Vagrant.configure("2") do |config|
  end
  config.vm.define :clienteUbuntu do |clienteUbuntu|
  clienteUbuntu.vm.box = "bento/ubuntu-22.04"
- clienteUbuntu.vm.network :private_network, ip: "192.168.100.2"
+ clienteUbuntu.vm.network :private_network, ip: "192.168.100.3"
  clienteUbuntu.vm.hostname = "clienteUbuntu"
  end
  config.vm.define :servidorUbuntu do |servidorUbuntu|
  servidorUbuntu.vm.box = "bento/ubuntu-22.04"
- servidorUbuntu.vm.network :private_network, ip: "192.168.100.3"
+ servidorUbuntu.vm.network :private_network, ip: "192.168.100.2"
  servidorUbuntu.vm.hostname = "servidorUbuntu"
  end
 end
+```
 
 1. **Docker**: Asegurarse de tener Docker instalado en tu máquina.
 2. **Docker Compose**: Asegurarse de tener Docker Compose instalado.

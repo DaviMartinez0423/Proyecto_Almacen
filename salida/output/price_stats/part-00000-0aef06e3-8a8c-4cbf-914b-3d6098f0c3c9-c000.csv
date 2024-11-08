@@ -1,0 +1,13 @@
+neighbourhood_group,room_type,avg_price,max_price
+Bronx,Entire home/apt,278.30755176613883,499
+Bronx,Hotel room,277.1948562783661,499
+Bronx,Private room,274.22036474164133,499
+Brooklyn,Entire home/apt,277.513785947228,499
+Brooklyn,Hotel room,273.7213900539245,499
+Brooklyn,Private room,275.18569746909947,499
+Manhattan,Entire home/apt,276.35570267830275,499
+Manhattan,Hotel room,277.6743010113028,499
+Manhattan,Private room,274.38537488429495,499
+Queens,Entire home/apt,275.4939042521558,499
+Queens,Hotel room,272.5583259127337,499
+Queens,Private room,270.391771019678,499

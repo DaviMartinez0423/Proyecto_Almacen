@@ -6,6 +6,28 @@ Este proyecto presenta una aplicación de procesamiento y visualización de dato
 2. **Aplicacion PySpark**: Realiza el tratamiento de datos de un dataset derivado de la aplicacion principal
 
 ## Requisitos
+1. **Maquina Virtual**: Este proyecto la desarrollaremos usando un Box de Ubuntu 22.04 en Vagrant. El Vagrantfile que usaremos es el siguiente:
+
+```ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+Vagrant.configure("2") do |config|
+ if Vagrant.has_plugin? "vagrant-vbguest"
+ config.vbguest.no_install = true
+ config.vbguest.auto_update = false
+ config.vbguest.no_remote = true
+ end
+ config.vm.define :clienteUbuntu do |clienteUbuntu|
+ clienteUbuntu.vm.box = "bento/ubuntu-22.04"
+ clienteUbuntu.vm.network :private_network, ip: "192.168.100.2"
+ clienteUbuntu.vm.hostname = "clienteUbuntu"
+ end
+ config.vm.define :servidorUbuntu do |servidorUbuntu|
+ servidorUbuntu.vm.box = "bento/ubuntu-22.04"
+ servidorUbuntu.vm.network :private_network, ip: "192.168.100.3"
+ servidorUbuntu.vm.hostname = "servidorUbuntu"
+ end
+end
 
 1. **Docker**: Asegurarse de tener Docker instalado en tu máquina.
 2. **Docker Compose**: Asegurarse de tener Docker Compose instalado.
